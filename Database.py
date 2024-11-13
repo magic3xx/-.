@@ -5,7 +5,7 @@ import uuid
 from flask import jsonify
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///licenses.db'  # Update if using PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///licenses.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -62,6 +62,8 @@ def add_license():
 
     return redirect(url_for('index'))
 
+
+
 @app.route('/list_licenses', methods=['GET'])
 def list_licenses():
     licenses = License.query.all()
@@ -73,6 +75,7 @@ def list_licenses():
         'device_id': license.device_id,
         'activated': license.activated
     } for license in licenses])
+
 
 @app.route('/reset_key', methods=['POST'])
 def reset_key():
@@ -139,7 +142,9 @@ def check_key_details():
 
     return jsonify({'valid': False, 'reason': 'Key not found.'})
 
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run()  # Note: this will not be used when running with Gunicorn
+    app.run(host='0.0.0.0', port=5000, debug=True)  # Allow external access
