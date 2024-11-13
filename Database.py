@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import uuid
-from flask import jsonify
+import os
+from netlify_wsgi import NetlifyWsgi
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///licenses.db'
@@ -143,7 +144,7 @@ def check_key_details():
     return jsonify({'valid': False, 'reason': 'Key not found.'})
 
 
-
+handler = NetlifyWsgi(app)
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
